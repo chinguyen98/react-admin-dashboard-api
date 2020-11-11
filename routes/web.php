@@ -16,4 +16,5 @@ use App\Http\Controllers\AuthController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/sign-up', [AuthController::class, 'signup']);
+    Route::post('/sign-in', [AuthController::class, 'signin']);
 });

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -33,5 +35,23 @@ class AuthController extends Controller
                 'status' => Response::HTTP_CONFLICT,
             ], Response::HTTP_CONFLICT);
         }
+    }
+
+    public function signin(SignInRequest $request)
+    {
+        $credential = $request->only('email', 'password');
+        $token = null;
+
+        if (!$token = JWTAuth::attempt($credential)) {
+            return response()->json([
+                'message' => 'Invalid email or password!',
+                'status' => Response::HTTP_UNAUTHORIZED,
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'token' => $token,
+        ], Response::HTTP_OK);
     }
 }
