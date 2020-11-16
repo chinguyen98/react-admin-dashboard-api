@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -17,4 +18,8 @@ use App\Http\Controllers\AuthController;
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/sign-up', [AuthController::class, 'signup']);
     Route::post('/sign-in', [AuthController::class, 'signin']);
+});
+
+Route::group(['middleware' => ['auth.jwt']], function () {
+    Route::get('/users', [ResourceController::class, 'getAllUser']);
 });
